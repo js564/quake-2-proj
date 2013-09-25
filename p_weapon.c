@@ -534,6 +534,9 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	int		speed;
 	float	radius;
 
+	float damage_radius = 120;
+	int radius_damage = 120;
+
 	radius = damage+40;
 	if (is_quad)
 		damage *= 4;
@@ -544,7 +547,9 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 
 	timer = ent->client->grenade_time - level.time;
 	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
-	fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
+	
+	//fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
+	fire_rocket (ent, start, forward, damage, 650, damage_radius, radius_damage);
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 		ent->client->pers.inventory[ent->client->ammo_index]--;
@@ -695,6 +700,9 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 	int		damage = 120;
 	float	radius;
 
+	float damage_radius = 120;
+	int radius_damage = 120;
+
 	radius = damage+40;
 	if (is_quad)
 		damage *= 4;
@@ -706,7 +714,8 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_grenade (ent, start, forward, damage, 600, 2.5, radius);
+	//fire_grenade (ent, start, forward, damage, 600, 2.5, radius);
+	fire_rocket (ent, start, forward, damage, 600, damage_radius, radius_damage);
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
@@ -800,6 +809,9 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	vec3_t	start;
 	vec3_t	offset;
 
+	float	damage_radius = 120;
+	int		radius_damage = 120;
+
 	if (is_quad)
 		damage *= 4;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
@@ -810,7 +822,8 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
+	//fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
+	fire_rocket (ent, start, forward, damage, 1000, damage_radius, radius_damage);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -941,6 +954,9 @@ void Machinegun_Fire (edict_t *ent)
 	int			kick = 2;
 	vec3_t		offset;
 
+	float damage_radius = 120;
+	int radius_damage = 120;
+
 	if (!(ent->client->buttons & BUTTON_ATTACK))
 	{
 		ent->client->machinegun_shots = 0;
@@ -992,7 +1008,9 @@ void Machinegun_Fire (edict_t *ent)
 	AngleVectors (angles, forward, right, NULL);
 	VectorSet(offset, 0, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_MACHINEGUN);
+	
+	//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_MACHINEGUN);
+	fire_rocket (ent, start, forward, damage, 700, damage_radius, radius_damage);
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
@@ -1035,6 +1053,9 @@ void Chaingun_Fire (edict_t *ent)
 	vec3_t		offset;
 	int			damage;
 	int			kick = 2;
+	
+	float damage_radius = 120;
+	int radius_damage = 120;
 
 	if (deathmatch->value)
 		damage = 6;
@@ -1129,7 +1150,8 @@ void Chaingun_Fire (edict_t *ent)
 		VectorSet(offset, 0, r, u + ent->viewheight-8);
 		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-		fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
+		//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
+		fire_rocket (ent, start, forward, damage, 700, damage_radius, radius_damage);
 	}
 
 	// send muzzle flash
@@ -1170,6 +1192,9 @@ void weapon_shotgun_fire (edict_t *ent)
 	int			damage = 4;
 	int			kick = 8;
 
+	float damage_radius = 120;
+	int radius_damage = 120;
+
 	if (ent->client->ps.gunframe == 9)
 	{
 		ent->client->ps.gunframe++;
@@ -1191,9 +1216,31 @@ void weapon_shotgun_fire (edict_t *ent)
 	}
 
 	if (deathmatch->value)
-		fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
+	{
+		//fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
+		fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+		VectorSet(offset, 8, -8, ent->viewheight-8);
+		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+		fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+		VectorSet(offset, 0, 0, ent->viewheight-8);
+		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+		fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+	}
 	else
-		fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_SHOTGUN_COUNT, MOD_SHOTGUN);
+	{
+		//fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_SHOTGUN_COUNT, MOD_SHOTGUN);
+		fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+		VectorSet(offset, 8, -8, ent->viewheight-8);
+		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+		fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+		VectorSet(offset, 0, 0, ent->viewheight-8);
+		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+		fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+	}
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -1226,6 +1273,9 @@ void weapon_supershotgun_fire (edict_t *ent)
 	int			damage = 6;
 	int			kick = 12;
 
+	float damage_radius = 120;
+	int radius_damage = 120;
+
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorScale (forward, -2, ent->client->kick_origin);
@@ -1244,10 +1294,28 @@ void weapon_supershotgun_fire (edict_t *ent)
 	v[YAW]   = ent->client->v_angle[YAW] - 5;
 	v[ROLL]  = ent->client->v_angle[ROLL];
 	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	//fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
 	v[YAW]   = ent->client->v_angle[YAW] + 5;
 	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	
+	//fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+	VectorSet(offset, 8, -8, ent->viewheight-8);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+	VectorSet(offset, 0, 0, ent->viewheight-8);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+	VectorSet(offset, 16, 16, ent->viewheight-8);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
+
+	VectorSet(offset, -8, 8, ent->viewheight-8);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 800, damage_radius, radius_damage);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -1287,6 +1355,9 @@ void weapon_railgun_fire (edict_t *ent)
 	vec3_t		offset;
 	int			damage;
 	int			kick;
+	
+	float damage_radius = 120;
+	int radius_damage = 120;
 
 	if (deathmatch->value)
 	{	// normal damage is too extreme in dm
@@ -1312,7 +1383,11 @@ void weapon_railgun_fire (edict_t *ent)
 
 	VectorSet(offset, 0, 7,  ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rail (ent, start, forward, damage, kick);
+	
+	//fire_rail (ent, start, forward, damage, kick);
+	fire_rocket (ent, start, forward, damage, 5000, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 5000, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 5000, damage_radius, radius_damage);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -1350,7 +1425,10 @@ void weapon_bfg_fire (edict_t *ent)
 	vec3_t	offset, start;
 	vec3_t	forward, right;
 	int		damage;
-	float	damage_radius = 1000;
+	//float	damage_radius = 1000;
+
+	float	damage_radius = 500;
+	int radius_damage = damage;
 
 	if (deathmatch->value)
 		damage = 200;
@@ -1393,7 +1471,41 @@ void weapon_bfg_fire (edict_t *ent)
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_bfg (ent, start, forward, damage, 400, damage_radius);
+	
+	//fire_bfg (ent, start, forward, damage, 400, damage_radius);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+
+	VectorSet(offset, 8, -8, ent->viewheight-15);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//l
+
+	VectorSet(offset, 0, 0, ent->viewheight-15);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//ml
+
+	VectorSet(offset, 16, 16, ent->viewheight-15);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//r
+
+	VectorSet(offset, -8, 8, ent->viewheight-15);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//mr
+
+	VectorSet(offset, 8, -8, ent->viewheight);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+
+	VectorSet(offset, 0, 0, ent->viewheight+5);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+
+	VectorSet(offset, 16, 16, ent->viewheight);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+
+	VectorSet(offset, -8, 8, ent->viewheight+5);
+	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
 
 	ent->client->ps.gunframe++;
 
