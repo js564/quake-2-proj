@@ -1427,7 +1427,7 @@ void weapon_bfg_fire (edict_t *ent)
 	int		damage;
 	//float	damage_radius = 1000;
 
-	float	damage_radius = 500;
+	float	damage_radius = 5000;
 	int radius_damage = damage;
 
 	if (deathmatch->value)
@@ -1473,39 +1473,39 @@ void weapon_bfg_fire (edict_t *ent)
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	
 	//fire_bfg (ent, start, forward, damage, 400, damage_radius);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);
 
 	VectorSet(offset, 8, -8, ent->viewheight-15);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//l
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);//l
 
 	VectorSet(offset, 0, 0, ent->viewheight-15);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//ml
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);//ml
 
 	VectorSet(offset, 16, 16, ent->viewheight-15);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//r
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);//r
 
 	VectorSet(offset, -8, 8, ent->viewheight-15);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);//mr
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);//mr
 
 	VectorSet(offset, 8, -8, ent->viewheight);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);
 
 	VectorSet(offset, 0, 0, ent->viewheight+5);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);
 
 	VectorSet(offset, 16, 16, ent->viewheight);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);
 
 	VectorSet(offset, -8, 8, ent->viewheight+5);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 300, damage_radius, radius_damage);
+	fire_rocket (ent, start, forward, damage, 250, damage_radius, radius_damage);
 
 	ent->client->ps.gunframe++;
 
