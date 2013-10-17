@@ -392,6 +392,22 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 
 	client = targ->client;
 
+	if (targ->takedamage)
+	{
+		if (targ->client)
+		{
+			if (client->pers.frozen == 1)
+			{
+				client->pers.frozen = 0;
+			}
+			else
+			{
+				client->pers.frozen = 1;
+			}
+		}
+	}
+
+
 	if (dflags & DAMAGE_BULLET)
 		te_sparks = TE_BULLET_SPARKS;
 	else

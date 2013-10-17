@@ -1601,13 +1601,23 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			client->ps.pmove.pm_type = PM_NORMAL;
 
 		client->ps.pmove.gravity = sv_gravity->value;
+		//400 is a good number
 		pm.s = client->ps.pmove;
 
-		for (i=0 ; i<3 ; i++)
-		{
-			pm.s.origin[i] = ent->s.origin[i]*8;
-			pm.s.velocity[i] = ent->velocity[i]*8;
-		}
+		if (client->pers.frozen==1)
+			{for (i=0 ; i<3 ; i++)
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = 0;
+				}
+			}
+		else
+			{for (i=0 ; i<3 ; i++)
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = ent->velocity[i]*8;
+				}
+			}
 
 		if (memcmp(&client->old_pmove, &pm.s, sizeof(pm.s)))
 		{

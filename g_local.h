@@ -845,6 +845,7 @@ typedef struct
 
 	qboolean	spectator;			// client is a spectator
 
+	int			frozen;
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns
