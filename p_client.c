@@ -1600,11 +1600,11 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		else
 			client->ps.pmove.pm_type = PM_NORMAL;
 
-		client->ps.pmove.gravity = sv_gravity->value;
+		client->ps.pmove.gravity = 100;
 		//400 is a good number
 		pm.s = client->ps.pmove;
 
-		if (client->pers.frozen==1)
+		/*if (client->pers.frozen==1)
 			{for (i=0 ; i<3 ; i++)
 				{
 					pm.s.origin[i] = ent->s.origin[i]*8;
@@ -1617,6 +1617,11 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 					pm.s.origin[i] = ent->s.origin[i]*8;
 					pm.s.velocity[i] = ent->velocity[i]*8;
 				}
+			}*/
+		for (i=0 ; i<3 ; i++)
+			{
+				pm.s.origin[i] = ent->s.origin[i]*8;
+				pm.s.velocity[i] = ent->velocity[i]*8;
 			}
 
 		if (memcmp(&client->old_pmove, &pm.s, sizeof(pm.s)))
@@ -1640,7 +1645,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		for (i=0 ; i<3 ; i++)
 		{
 			ent->s.origin[i] = pm.s.origin[i]*0.125;
-			ent->velocity[i] = pm.s.velocity[i]*0.125;
+			ent->velocity[i] = pm.s.velocity[i]*0.0125;
 		}
 
 		VectorCopy (pm.mins, ent->mins);
