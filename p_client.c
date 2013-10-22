@@ -1600,10 +1600,11 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		else
 			client->ps.pmove.pm_type = PM_NORMAL;
 
-		client->ps.pmove.gravity = 100;
-		//400 is a good number
+		client->ps.pmove.gravity = 200;
+		//400 is a good number w/ normal speed
 		pm.s = client->ps.pmove;
 
+		//Below is for freeze tag
 		/*if (client->pers.frozen==1)
 			{for (i=0 ; i<3 ; i++)
 				{
@@ -1618,10 +1619,18 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 					pm.s.velocity[i] = ent->velocity[i]*8;
 				}
 			}*/
-		for (i=0 ; i<3 ; i++)
+		for (i=0 ; i<2 ; i++)
 			{
-				pm.s.origin[i] = ent->s.origin[i]*8;
-				pm.s.velocity[i] = ent->velocity[i]*8;
+				if (ent->groundentity && !pm.groundentity && (pm.cmd.upmove >= 10) && (pm.waterlevel == 0))
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = ent->velocity[i]*8;
+				}
+				else
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = ent->velocity[i]*4.5;
+				}
 			}
 
 		if (memcmp(&client->old_pmove, &pm.s, sizeof(pm.s)))
@@ -1645,7 +1654,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		for (i=0 ; i<3 ; i++)
 		{
 			ent->s.origin[i] = pm.s.origin[i]*0.125;
-			ent->velocity[i] = pm.s.velocity[i]*0.0125;
+			ent->velocity[i] = pm.s.velocity[i]*0.125;
 		}
 
 		VectorCopy (pm.mins, ent->mins);
