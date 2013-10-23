@@ -1600,7 +1600,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		else
 			client->ps.pmove.pm_type = PM_NORMAL;
 
-		client->ps.pmove.gravity = 200;
+		client->ps.pmove.gravity = 350;
 		//400 is a good number w/ normal speed
 		pm.s = client->ps.pmove;
 
@@ -1629,7 +1629,8 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 				else
 				{
 					pm.s.origin[i] = ent->s.origin[i]*8;
-					pm.s.velocity[i] = ent->velocity[i]*4.5;
+					pm.s.velocity[i] = ent->velocity[i]*5;
+					pm.s.velocity[2] = ent->velocity[2]*7.5;
 				}
 			}
 
