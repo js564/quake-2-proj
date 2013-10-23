@@ -1600,14 +1600,43 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		else
 			client->ps.pmove.pm_type = PM_NORMAL;
 
-		client->ps.pmove.gravity = sv_gravity->value;
+		/*
+		The player jumps super high with gravity this low.
+		Try to change how much force is applied when the player jumps to fix this.
+		- jc429
+		*/
+		client->ps.pmove.gravity = 200;
+		//400 is a good number w/ normal speed
 		pm.s = client->ps.pmove;
 
-		for (i=0 ; i<3 ; i++)
-		{
-			pm.s.origin[i] = ent->s.origin[i]*8;
-			pm.s.velocity[i] = ent->velocity[i]*8;
-		}
+		//Below is for freeze tag
+		/*if (client->pers.frozen==1)
+			{for (i=0 ; i<3 ; i++)
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = 0;
+				}
+			}
+		else
+			{for (i=0 ; i<3 ; i++)
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = ent->velocity[i]*8;
+				}
+			}*/
+		for (i=0 ; i<2 ; i++)
+			{
+				if (ent->groundentity && !pm.groundentity && (pm.cmd.upmove >= 10) && (pm.waterlevel == 0))
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = ent->velocity[i]*8;
+				}
+				else
+				{
+					pm.s.origin[i] = ent->s.origin[i]*8;
+					pm.s.velocity[i] = ent->velocity[i]*4.5;
+				}
+			}
 
 		if (memcmp(&client->old_pmove, &pm.s, sizeof(pm.s)))
 		{
